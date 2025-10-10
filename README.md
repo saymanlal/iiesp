@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+🚀 Project Setup Guide
+======================
 
-## Project info
+🧩 Overview
+-----------
 
-**URL**: https://lovable.dev/projects/f39ee29e-fde7-4c88-8881-ac0e375aa5fe
+This project is a modern web application built using:
 
-## How can I edit this code?
+*   **Vite**
+    
+*   **React**
+    
+*   **TypeScript**
+    
+*   **Tailwind CSS**
+    
+*   **shadcn/ui**
+    
 
-There are several ways of editing your application.
+It provides a fast development experience and clean component-based UI design.
 
-**Use Lovable**
+⚙️ Getting Started
+------------------
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f39ee29e-fde7-4c88-8881-ac0e375aa5fe) and start prompting.
+### 1\. Clone the repository
 
-Changes made via Lovable will be committed automatically to this repo.
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`git clone   cd` 
 
-**Use your preferred IDE**
+### 2\. Install dependencies
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Make sure you have **Node.js (v18+)** and **npm** installed.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm install   `
 
-Follow these steps:
+### 3\. Run the development server
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Start the local development server:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm run dev   `
 
-# Step 3: Install the necessary dependencies.
-npm i
+Now open [http://localhost:5173](http://localhost:5173) to view your app.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+📁 Project Structure
+--------------------
 
-**Edit a file directly in GitHub**
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   ├── src/  │   ├── components/   # Reusable UI components  │   ├── pages/        # Page-level views  │   ├── hooks/        # Custom React hooks  │   ├── lib/          # Utility functions  │   ├── styles/       # Tailwind & global styles  │   └── main.tsx      # Application entry point  ├── public/           # Static assets (favicon, images)  ├── package.json  └── vite.config.ts   `
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+🧱 Building for Production
+--------------------------
 
-**Use GitHub Codespaces**
+To create an optimized build:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm run build   `
 
-## What technologies are used for this project?
+To preview the production build locally:
 
-This project is built with:
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm run preview   `
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+🌐 Deployment
+-------------
 
-## How can I deploy this project?
+You can deploy this app easily using platforms like:
 
-Simply open [Lovable](https://lovable.dev/projects/f39ee29e-fde7-4c88-8881-ac0e375aa5fe) and click on Share -> Publish.
+*   **Vercel**
+    
+*   **Netlify**
+    
+*   **GitHub Pages**
+    
+*   **Render**
+    
 
-## Can I connect a custom domain to my Lovable project?
+Example (Vercel):
 
-Yes, you can!
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm i -g vercel  vercel   `
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+🧑‍💻 Contributing
+------------------
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1.  Fork this repository
+    
+2.  git checkout -b feature/your-feature
+    
+3.  git commit -m "Add your feature"
+    
+4.  git push origin feature/your-feature
+    
+5.  Open a Pull Request
+    
+
+📜 License
+----------
+
+This project is open source and available under the MIT License.
