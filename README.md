@@ -43,18 +43,18 @@ Now open [http://localhost:5173](http://localhost:5173) to view your app.
 📁 Project Structure
 --------------------
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   ├── src/  │   ├── components/   # Reusable UI components  │   ├── pages/        # Page-level views  │   ├── hooks/        # Custom React hooks  │   ├── lib/          # Utility functions  │   ├── styles/       # Tailwind & global styles  │   └── main.tsx      # Application entry point  ├── public/           # Static assets (favicon, images)  ├── package.json  └── vite.config.ts   `
+`   ├── src/  │   ├── components/   # Reusable UI components  │   ├── pages/        # Page-level views  │   ├── hooks/        # Custom React hooks  │   ├── lib/          # Utility functions  │   ├── styles/       # Tailwind & global styles  │   └── main.tsx      # Application entry point  ├── public/           # Static assets (favicon, images)  ├── package.json  └── vite.config.ts   `
 
 🧱 Building for Production
 --------------------------
 
 To create an optimized build:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm run build   `
+`   npm run build   `
 
 To preview the production build locally:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   npm run preview   `
+`   npm run preview   `
 
 🌐 Deployment
 -------------
