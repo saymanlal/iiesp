@@ -126,3 +126,7 @@ All colors MUST be HSL.
     }
   }
 }
+  [data-lovable-badge], .lovable-footer, .lovable-tag {
+  display: none !important;
+}
+
