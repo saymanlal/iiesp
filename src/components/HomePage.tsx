@@ -1,385 +1,449 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { User, Award, BookOpen, ArrowRight, Users, Globe, Clock, Lightbulb, Handshake } from "lucide-react";
+import {
+  ArrowRight,
+  Award,
+  Users,
+  Calendar,
+  Lightbulb,
+  Globe,
+  Target,
+  Handshake,
+  BookOpen,
+  Shield,
+  GraduationCap,
+  Menu,
+  Sun,
+  Moon,
+} from "lucide-react";
 
-// Lazy observer hook
-const useLazyObserver = (options = { threshold: 0.15 }) => {
+// Notifications for ticker
+const TICKER_NOTIFICATIONS = [
+  { id: 1, text: "Admissions open for Winter 2025 — Enroll now!", href: "/admissions" },
+  { id: 2, text: "Upcoming: SkillHack Summit — Register today", href: "/events" },
+  { id: 3, text: "New: Global Diploma in AI — Apply", href: "/courses/ai" },
+];
+
+// Intersection observer hook for appear-on-scroll
+const useLazyObserver = (threshold = 0.15) => {
+  const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
-  const ref = useRef(null);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setVisible(true);
-        observer.disconnect();
-      }
-    }, options);
-    if (ref.current) observer.observe(ref.current);
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold }
+    );
+    observer.observe(el);
     return () => observer.disconnect();
-  }, [options]);
-  return [ref, visible];
+  }, [threshold]);
+
+  return [ref, visible] as const;
 };
-// Counter component
-const AnimatedCounter = ({ value }: { value: number }) => {
+
+// Animated counter
+const AnimatedCounter: React.FC<{ value: number; suffix?: string }> = ({ value, suffix = "+" }) => {
   const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let started = false;
+    const el = ref.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !started) {
           started = true;
-          let start = 0;
-          const duration = 2000; // 2 seconds
-          const increment = value / (duration / 16);
-          const step = () => {
-            start += increment;
-            if (start < value) {
-              setCount(Math.floor(start));
-              requestAnimationFrame(step);
+          const duration = 1800;
+          const stepTime = 16;
+          const steps = Math.max(1, Math.round(duration / stepTime));
+          const increment = value / steps;
+          let cur = 0;
+          const run = () => {
+            cur += increment;
+            if (cur < value) {
+              setCount(Math.floor(cur));
+              requestAnimationFrame(run);
             } else {
               setCount(value);
             }
           };
-          requestAnimationFrame(step);
+          requestAnimationFrame(run);
+          observer.unobserve(el);
         }
       },
       { threshold: 0.5 }
     );
-    if (ref.current) observer.observe(ref.current);
+    observer.observe(el);
     return () => observer.disconnect();
   }, [value]);
 
-  return <div ref={ref} className="text-4xl font-extrabold text-primary mb-2">{count}+</div>;
+  return (
+    <div ref={ref} className="text-4xl md:text-5xl font-extrabold text-primary mb-2">
+      {count}
+      {suffix}
+    </div>
+  );
 };
 
-export const HomePage = () => {
+export const HomePage: React.FC = () => {
+  // Sections observer
   const [aboutRef, aboutVisible] = useLazyObserver();
-  const [coursesRef, coursesVisible] = useLazyObserver();
+  const [programsRef, programsVisible] = useLazyObserver();
   const [galleryRef, galleryVisible] = useLazyObserver();
-  const [testimonialRef, testimonialVisible] = useLazyObserver();
+  const [testRef, testVisible] = useLazyObserver();
   const [contactRef, contactVisible] = useLazyObserver();
 
+  // Theme toggle
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    return (localStorage.getItem("iiesp-theme") as "light" | "dark") || "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("iiesp-theme", theme);
+  }, [theme]);
+
+  // Ticker pause hover
+  const [tickerPaused, setTickerPaused] = useState(false);
+
+  // Programs marquee
+  const programs = ["AI & ML", "Web Development", "Data Science", "Cybersecurity", "Cloud & DevOps", "UI/UX Design"];
+
   return (
-    <div className="w-full bg-gray-50 text-gray-900 antialiased">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-blue-50 to-white overflow-hidden px-6 md:px-20">
-        <div className="w-full md:w-1/2 flex flex-col items-start z-10">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-gradient">
-            <span className="block">IIESP</span>
-            <span className="text-primary">Empowering Your Future</span>
-          </h1>
-          <p className="text-lg md:text-xl mb-6 max-w-lg text-gray-700">
-            A unified hub for certifications, diplomas, and hands-on projects bridging education and employability.
-          </p>
-          <div className="flex gap-4 mb-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      {/* NAVBAR */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-gray-200 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-md bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center font-bold">II</div>
+            <div className="hidden sm:block">
+              <div className="font-semibold">IIESP</div>
+              <div className="text-xs text-muted-foreground">Certifications & Diplomas</div>
+            </div>
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            <Link to="/" className="hover:text-primary">Home</Link>
+            <a href="#about" className="hover:text-primary">About</a>
+            <a href="#programs" className="hover:text-primary">Programs</a>
+            <a href="#gallery" className="hover:text-primary">Gallery</a>
+            <a href="#contact" className="hover:text-primary">Contact</a>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            {/* Theme toggle */}
+            <button
+              aria-label="Toggle theme"
+              onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+            >
+              {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+            </button>
+
             <Link to="/register">
-              <Button size="lg" className="gap-2 bg-gradient-to-r from-primary to-secondary text-white">
-                Get Started <ArrowRight className="w-4 h-4" />
-              </Button>
+              <Button size="sm">Get Started</Button>
             </Link>
-            <Link to="/courses">
-              <Button size="lg" variant="outline">
-                Explore Courses
-              </Button>
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
-            {[
-              { icon: <Award className="w-6 h-6 text-primary" />, title: "Certified Programs" },
-              { icon: <Users className="w-6 h-6 text-primary" />, title: "Global Community" },
-              { icon: <BookOpen className="w-6 h-6 text-primary" />, title: "Expert Mentors" },
-              { icon: <ArrowRight className="w-6 h-6 text-primary" />, title: "Career Ready" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-2 bg-white p-3 rounded-lg shadow hover:shadow-lg transition">
-                {item.icon} <span className="font-medium">{item.title}</span>
+            <button className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Notification ticker */}
+        <div
+          className={`w-full border-t border-gray-200 dark:border-gray-800 overflow-hidden`}
+          onMouseEnter={() => setTickerPaused(true)}
+          onMouseLeave={() => setTickerPaused(false)}
+        >
+          <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 flex items-center gap-4">
+            <div className="text-sm font-semibold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/20 px-2 py-1 rounded-sm">Notifications</div>
+            <div className="flex-1 overflow-hidden">
+              <div
+                className="inline-flex whitespace-nowrap gap-12 items-center will-change-transform"
+                style={{
+                  animation: `${tickerPaused ? "none" : "ticker 22s linear infinite"}`,
+                  transform: tickerPaused ? "translateX(0)" : undefined,
+                }}
+                role="list"
+              >
+                {TICKER_NOTIFICATIONS.concat(TICKER_NOTIFICATIONS).map((n, i) => (
+                  <a
+                    key={i}
+                    href={n.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition"
+                    role="listitem"
+                  >
+                    {n.text}
+                  </a>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
 
-        {/* Hero Image */}
-        <div className="w-full md:w-1/2 mt-10 md:mt-0 relative">
-          <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-[50px] [clip-path:polygon(10%_0%,90%_0%,100%_10%,100%_90%,90%_100%,10%_100%,0%_90%,0%_10%)] animate-fade-in shadow-2xl"></div>
-          <img
-            src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238"
-            alt="Learning"
-            className="relative w-full h-[400px] md:h-[500px] object-cover rounded-[30px] shadow-xl"
-          />
+        <style>{`
+          @keyframes ticker {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+          }
+        `}</style>
+      </header>
+
+      {/* PAGE CONTENT */}
+      <main className="pt-28">
+        {/* HERO */}
+<section className="relative min-h-[80vh] flex items-center px-4 md:px-8 lg:px-20 overflow-hidden">
+  {/* Top-right colorful shadow/glow */}
+  <div className="absolute -right-32 top-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 opacity-30 blur-3xl animate-pulse-slow -z-10"></div>
+
+  {/* Bottom-right secondary shadow/glow */}
+  <div className="absolute -right-20 bottom-0 w-[400px] h-[400px] rounded-tl-full bg-gradient-to-tl from-pink-500 to-yellow-400 opacity-25 blur-2xl animate-pulse-slow -z-10"></div>
+
+  <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-8 w-full transition-all duration-1000 transform opacity-0 translate-y-10 animate-hero-fade-in">
+    {/* Left text */}
+    <div className="md:w-1/2 text-center md:text-left z-10">
+      <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4 animate-fade-up">
+        <span className="block text-gradient">IIESP</span>
+        A unified hub for certifications & professional growth
+      </h1>
+      <p className="text-lg text-muted-foreground mb-6 animate-fade-up animate-delay-200">
+        Learn from industry experts, join curated events, build real projects and earn credentials that employers trust.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center sm:items-start animate-fade-up animate-delay-400">
+        <Link to="/register">
+          <Button size="lg" className="bg-gradient-to-r from-primary to-secondary text-white flex items-center gap-2">
+            Start Learning <ArrowRight className="w-4 h-4" />
+          </Button>
+        </Link>
+        <Link to="/courses">
+          <Button size="lg" variant="outline">Explore Programs</Button>
+        </Link>
+      </div>
+
+      <div className="mt-8 grid grid-cols-2 gap-3 animate-fade-up animate-delay-600">
+        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow">
+          <Award className="w-5 h-5 text-primary" /> <span className="text-sm">Certified Programs</span>
         </div>
-      </section>
-
-     {/* About Us + Why IIESP Section */}
-<section
-  ref={aboutRef}
-  className={`py-28 px-6 md:px-20 bg-gradient-to-b from-white to-muted/10 transition-all duration-700 ${
-    aboutVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-  }`}
->
-  {/* Section Header */}
-  <div className="max-w-6xl mx-auto text-center mb-20">
-    <h2 className="text-5xl md:text-6xl font-extrabold mb-4 text-primary">About IIESP</h2>
-    <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-      IIESP (Integrated Institute for Education, Skills, and Professionalism) is a unified learning ecosystem designed to empower learners with practical knowledge, industry-aligned programs, and globally recognized credentials. Our mission is to bridge the gap between education and employability.
-    </p>
-  </div>
-
-  {/* About Stats */}
-  <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-24 text-center">
-    {[
-      { value: "50+", label: "Certified Programs" },
-      { value: "100+", label: "Expert Mentors" },
-      { value: "10k+", label: "Global Learners" },
-      { value: "500+", label: "Hands-On Projects" },
-    ].map((stat, i) => (
-      <div
-        key={i}
-        className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition transform hover:-translate-y-2 will-appear"
-        style={{ transitionDelay: `${i * 150}ms` }}
-      >
-        <div className="text-4xl font-extrabold text-primary mb-2">{stat.value}</div>
-        <div className="text-gray-600">{stat.label}</div>
+        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow">
+          <Users className="w-5 h-5 text-primary" /> <span className="text-sm">Global Community</span>
+        </div>
+        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow">
+          <Calendar className="w-5 h-5 text-primary" /> <span className="text-sm">Live Events</span>
+        </div>
+        <div className="flex items-center gap-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow">
+          <Target className="w-5 h-5 text-primary" /> <span className="text-sm">Career Focused</span>
+        </div>
       </div>
-    ))}
+    </div>
+
+    {/* Right hero image */}
+    <div className="md:w-1/2 relative flex justify-center md:justify-end animate-fade-up animate-delay-800">
+      <div className="w-full h-[400px] md:h-[520px] rounded-[40px_10px_50px_10px] overflow-hidden shadow-2xl border-8 border-white dark:border-gray-800">
+        <img
+          src="iiesp-0.png"
+          alt="hero"
+          className="w-full h-full object-cover"
+          style={{ clipPath: "polygon(10% 0%, 100% 0%, 100% 85%, 85% 100%, 0% 100%, 0% 15%)" }}
+        />
+      </div>
+    </div>
   </div>
 
-  {/* Why IIESP Cards */}
-  <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-    {[
-      {
-        title: "Career Growth",
-        desc: "Programs designed with industry input ensuring your learning translates into real-world opportunities.",
-        icon: "🎯",
-      },
-      {
-        title: "Expert Mentors",
-        desc: "Learn from professionals with proven experience guiding your path to excellence.",
-        icon: "👨‍🏫",
-      },
-      {
-        title: "Hands-On Learning",
-        desc: "Engage in live projects, capstones, and assignments to develop practical skills.",
-        icon: "🛠️",
-      },
-      {
-        title: "Global Community",
-        desc: "Connect and collaborate with learners, educators, and organizations worldwide.",
-        icon: "🌍",
-      },
-      {
-        title: "Verified Credentials",
-        desc: "Earn certificates and diplomas recognized by industry and institutions.",
-        icon: "📜",
-      },
-      {
-        title: "Flexible Learning",
-        desc: "Study at your own pace with online and hybrid program options.",
-        icon: "⏰",
-      },
-      {
-        title: "Innovative Curriculum",
-        desc: "Our curriculum is updated regularly to meet modern industry standards.",
-        icon: "💡",
-      },
-      {
-        title: "Supportive Ecosystem",
-        desc: "Get mentoring, peer collaboration, and placement support at every step.",
-        icon: "🤝",
-      },
-    ].map((item, i) => (
-      <div
-        key={i}
-        className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition transform hover:-translate-y-3 will-appear text-center"
-        style={{ transitionDelay: `${i * 100}ms` }}
-      >
-        <div className="text-5xl mb-4">{item.icon}</div>
-        <h3 className="font-bold text-xl mb-3">{item.title}</h3>
-        <p className="text-gray-600 text-sm">{item.desc}</p>
-      </div>
-    ))}
-  </div>
+  <style>{`
+    .text-gradient {
+      background: linear-gradient(90deg,#3b82f6,#9333ea);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes heroFadeIn {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-hero-fade-in {
+      animation: heroFadeIn 1s ease-out forwards;
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up { animation: fadeUp 0.8s ease-out forwards; }
+    .animate-delay-200 { animation-delay: 0.2s; }
+    .animate-delay-400 { animation-delay: 0.4s; }
+    .animate-delay-600 { animation-delay: 0.6s; }
+    .animate-delay-800 { animation-delay: 0.8s; }
+
+    @keyframes pulseSlow {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+    }
+    .animate-pulse-slow {
+      animation: pulseSlow 6s ease-in-out infinite;
+    }
+  `}</style>
 </section>
 
 
-      {/* Courses Section */}
-      <section
-        ref={coursesRef}
-        className={`py-20 px-6 md:px-20 transition-all duration-700 ${coursesVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-      >
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Our Programs</h2>
+        {/* ABOUT */}
+        <section
+          id="about"
+          ref={aboutRef as any}
+          className={`py-20 px-4 md:px-8 lg:px-20 transition-all duration-700 ${aboutVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+        >
+          <div className="max-w-6xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-3">About IIESP</h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">
+              Integrated Institute for Education, Skills & Professionalism — bridging education and industry through practical programs and verified credentials.
+            </p>
+          </div>
 
-        {/* Boxed marquee container */}
-        <div className="overflow-hidden relative bg-muted/20 p-6 rounded-2xl shadow-inner">
-          <div className="flex gap-6 animate-marquee-box">
-            {["AI & ML", "Web Development", "Design Thinking", "Cloud & DevOps", "Cybersecurity", "Data Science"].map(
-              (course, i) => (
-                <div
-                  key={i}
-                  className="flex-none w-64 md:w-72 bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 border border-border"
-                >
-                  <h3 className="font-bold text-xl mb-2">{course}</h3>
-                  <p className="text-gray-600 text-sm">Hands-on practical training for real-world applications.</p>
+          {/* Counters */}
+          <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+            {[
+              { label: "Programs", val: 60, icon: <BookOpen className="w-6 h-6 text-primary" /> },
+              { label: "Events", val: 30, icon: <Calendar className="w-6 h-6 text-primary" /> },
+              { label: "Learners", val: 12000, icon: <Users className="w-6 h-6 text-primary" /> },
+              { label: "Partners", val: 200, icon: <Handshake className="w-6 h-6 text-primary" /> },
+            ].map((s, i) => (
+              <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 text-center shadow">
+                <div className="flex justify-center mb-3">{s.icon}</div>
+                <AnimatedCounter value={s.val} />
+                <div className="text-muted-foreground">{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Why boxes */}
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "Career Growth", desc: "Aligned programs to boost employability.", icon: <Target className="w-6 h-6 text-primary" /> },
+              { title: "Skill Events", desc: "Workshops, bootcamps and summits.", icon: <Calendar className="w-6 h-6 text-primary" /> },
+              { title: "Innovation", desc: "Project-based learning and capstones.", icon: <Lightbulb className="w-6 h-6 text-primary" /> },
+              { title: "Global Network", desc: "Industry & academic collaborations.", icon: <Globe className="w-6 h-6 text-primary" /> },
+            ].map((b, i) => (
+              <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow hover:shadow-lg transition">
+                <div className="flex items-center justify-center mb-4">{b.icon}</div>
+                <h3 className="font-semibold mb-2">{b.title}</h3>
+                <p className="text-sm text-muted-foreground">{b.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* PROGRAMS MARQUEE */}
+        <section
+          id="programs"
+          ref={programsRef as any}
+          className={`py-16 px-4 md:px-8 lg:px-20 transition-all duration-700 ${programsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+        >
+          <div className="max-w-6xl mx-auto mb-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary">Our Programs</h2>
+          </div>
+
+          <div className="overflow-hidden">
+            <div className="flex gap-6 items-center animate-marquee-box will-change-transform" style={{ width: "max-content" }}>
+              {[...programs, ...programs].map((p, i) => (
+                <div key={i} className="flex-none w-64 md:w-72 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow">
+                  <h3 className="font-semibold text-lg text-primary mb-2">{p}</h3>
+                  <p className="text-sm text-muted-foreground">Industry-aligned curriculum & projects.</p>
                 </div>
-              )
-            )}
-
-            {/* Repeat same items for seamless loop */}
-            {["AI & ML", "Web Development", "Design Thinking", "Cloud & DevOps", "Cybersecurity", "Data Science"].map(
-              (course, i) => (
-                <div
-                  key={`dup-${i}`}
-                  className="flex-none w-64 md:w-72 bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 border border-border"
-                >
-                  <h3 className="font-bold text-xl mb-2">{course}</h3>
-                  <p className="text-gray-600 text-sm">Hands-on practical training for real-world applications.</p>
-                </div>
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-
-      {/* Gallery Section */}
-      <section
-        ref={galleryRef}
-        className={`py-20 px-6 md:px-20 transition-all duration-700 ${galleryVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-      >
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Learning in Action</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {["ai", "learning", "classroom", "students", "teacher", "graduation"].map((topic, i) => (
-            <div
-              key={i}
-              className="relative overflow-hidden rounded-xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:rotate-1 cursor-pointer"
-            >
-              <img
-                src={`https://source.unsplash.com/800x600/?${topic}`}
-                alt={topic}
-                className="w-full h-72 md:h-80 object-cover"
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section
-        ref={testimonialRef}
-        className={`py-20 px-6 md:px-20 transition-all duration-700 ${testimonialVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-      >
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Testimonials</h2>
-        {/* Students Carousel */}
-        <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-          {[
-            { name: "Aisha Verma", text: "Certification helped me land my dream job!" },
-            { name: "Rahul Singh", text: "Top-notch instructors and community support." },
-            { name: "Maya Dutta", text: "Bridges gap between education and employment." },
-          ].map((t, i) => (
-            <div key={i} className="flex-none w-80 bg-white rounded-xl shadow p-6 hover:shadow-2xl transition transform hover:-translate-y-2">
-              <p className="text-gray-700 mb-4">“{t.text}”</p>
-              <h4 className="font-semibold">{t.name}</h4>
-            </div>
-          ))}
-        </div>
-
-        {/* Industry Experts */}
-        <h3 className="text-3xl md:text-4xl font-bold text-center my-12">Industry Experts</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-          {[
-            { name: "Dr. Neha Sharma", title: "AI Specialist, Google", text: "IIESP programs are highly practical." },
-            { name: "Mr. Vikram Singh", title: "CTO, TechNext", text: "Bridges academic learning with industry skills." },
-            { name: "Ms. Priya Nair", title: "Lead Designer, Creative Labs", text: "Hands-on experience is invaluable." },
-          ].map((t, i) => (
-            <div key={i} className="bg-primary/5 p-8 rounded-xl shadow hover:shadow-2xl transition transform hover:-translate-y-3 text-center">
-              <h4 className="font-bold text-lg mb-1">{t.name}</h4>
-              <p className="text-sm text-gray-600 mb-3">{t.title}</p>
-              <p className="italic">{t.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section
-        ref={contactRef}
-        className={`py-20 px-6 md:px-20 transition-all duration-700 ${contactVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-      >
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-6">Contact Us</h2>
-        <p className="text-gray-700 text-center mb-10 max-w-xl mx-auto">
-          Have questions? Reach out to our support team or drop us a message below.
-        </p>
-        <form className="max-w-lg mx-auto space-y-4 bg-white p-8 rounded-xl shadow-lg">
-          <input type="text" placeholder="Your Name" className="w-full border rounded-lg p-4 shadow-sm focus:ring-2 focus:ring-primary" />
-          <input type="email" placeholder="Your Email" className="w-full border rounded-lg p-4 shadow-sm focus:ring-2 focus:ring-primary" />
-          <textarea placeholder="Message" className="w-full border rounded-lg p-4 h-36 shadow-sm focus:ring-2 focus:ring-primary" />
-          <Button className="w-full bg-gradient-to-r from-primary to-secondary text-white py-4 font-semibold rounded-lg hover:from-secondary hover:to-primary">
-            Send Message
-          </Button>
-        </form>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-100 text-gray-700 py-12 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
-          <div>
-            <h4 className="font-bold mb-4">IIESP</h4>
-            <p>Empowering learners worldwide with skill-focused, industry-relevant education.</p>
-          </div>
-          <div>
-            <h4 className="font-bold mb-4">Quick Links</h4>
-            <ul>
-              {["Home", "Courses", "About", "Contact"].map((link, i) => (
-                <li key={i} className="hover:text-primary transition cursor-pointer">{link}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold mb-4">Connect</h4>
-            <div className="flex gap-4">
-              {["facebook", "twitter", "instagram", "linkedin"].map((social) => (
-                <a key={social} href={`https://${social}.com`} target="_blank" rel="noreferrer" className="hover:text-primary transition">{social.charAt(0).toUpperCase() + social.slice(1)}</a>
               ))}
             </div>
           </div>
-        </div>
-        <p className="text-center mt-12 text-sm text-gray-500">© {new Date().getFullYear()} IIESP. All rights reserved.</p>
-      </footer>
 
-      {/* Inline CSS */}
-      <style>{`
-        .text-gradient {
-          background: linear-gradient(90deg, #3b82f6, #9333ea);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        .animate-fade-in { animation: fadeIn 1.2s ease-out both; }
-        @keyframes fadeIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-         @keyframes marquee-box {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
+          <style>{`
+            @keyframes marquee-box {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            .animate-marquee-box {
+              display: flex;
+              gap: 1.5rem;
+              animation: marquee-box 22s linear infinite;
+            }
+            @media (max-width: 768px) {
+              .animate-marquee-box { animation-duration: 26s; }
+            }
+          `}</style>
+        </section>
 
-    .animate-marquee-box {
-      display: flex;
-      gap: 1.5rem;
-      animation: marquee-box 20s linear infinite;
-      width: max-content;
-    }
+        {/* GALLERY */}
+        <section
+          id="gallery"
+          ref={galleryRef as any}
+          className={`py-16 px-4 md:px-8 lg:px-20 ${galleryVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"} transition-all duration-700`}
+        >
+          <div className="max-w-6xl mx-auto text-center mb-8">
+            <h2 className="text-3xl font-bold text-primary">Learning in Action</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition">
+                <img src={`https://source.unsplash.com/random/800x600?sig=${i}&education`} alt={`gallery-${i}`} className="w-full h-60 object-cover" />
+              </div>
+            ))}
+          </div>
+        </section>
 
-    @media (max-width: 768px) {
-      .animate-marquee-box {
-        animation: marquee-box 25s linear infinite;
-      }
-    }
-  `}</style>
+        {/* TESTIMONIALS */}
+        <section
+          ref={testRef as any}
+          className={`py-16 px-4 md:px-8 lg:px-20 ${testVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"} transition-all duration-700`}
+        >
+          <div className="max-w-6xl mx-auto text-center mb-8">
+            <h2 className="text-3xl font-bold text-primary">Testimonials</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Learners and industry leaders share their experience.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {[
+              { name: "Aisha Verma", role: "Graduate", text: "IIESP helped me land my first job.", icon: <GraduationCap className="w-6 h-6 text-primary" /> },
+              { name: "Rohit Sharma", role: "Industry Mentor", text: "Hands-on programs are really impactful.", icon: <Shield className="w-6 h-6 text-primary" /> },
+              { name: "Sneha Patel", role: "Learner", text: "Amazing community and projects!", icon: <Users className="w-6 h-6 text-primary" /> },
+            ].map((t, i) => (
+              <div key={i} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow hover:shadow-lg transition">
+                <div className="flex justify-center mb-3">{t.icon}</div>
+                <p className="text-sm text-muted-foreground mb-3">"{t.text}"</p>
+                <div className="font-semibold">{t.name}</div>
+                <div className="text-xs text-muted-foreground">{t.role}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* CONTACT */}
+        <section
+          id="contact"
+          ref={contactRef as any}
+          className={`py-16 px-4 md:px-8 lg:px-20 ${contactVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"} transition-all duration-700`}
+        >
+          <div className="max-w-6xl mx-auto text-center mb-8">
+            <h2 className="text-3xl font-bold text-primary">Get in Touch</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Have questions? Drop us a message and we will respond promptly.</p>
+          </div>
+
+          <form className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            <input type="text" placeholder="Name" className="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+            <input type="email" placeholder="Email" className="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+            <input type="text" placeholder="Subject" className="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 md:col-span-2" />
+            <textarea placeholder="Message" rows={5} className="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 md:col-span-2"></textarea>
+            <Button size="lg" className="md:col-span-2 w-full bg-gradient-to-r from-primary to-secondary text-white">Send Message</Button>
+          </form>
+        </section>
+      </main>
     </div>
   );
 };
