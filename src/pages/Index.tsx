@@ -1,11 +1,11 @@
 import { Navbar } from "@/components/Navbar";
-import { Hero } from "@/components/Hero";
+import { HomePage } from "@/components/HomePage";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <Hero />
+      <HomePage />
     </div>
   );
 };
