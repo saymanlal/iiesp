@@ -3,7 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { GraduationCap } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
@@ -18,13 +25,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 🔹 Handle Email/Password Login
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
       alert("Login successful!");
-      navigate("/");
+      navigate("/dashboard"); // Redirect to Dashboard
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -32,21 +40,23 @@ const Login = () => {
     }
   };
 
+  // 🔹 Handle Google Login
   const handleGoogleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
       alert("Logged in with Google!");
-      navigate("/");
+      navigate("/dashboard"); // Redirect to Dashboard
     } catch (error: any) {
       alert(error.message);
     }
   };
 
+  // 🔹 Handle Facebook Login
   const handleFacebookLogin = async () => {
     try {
       await signInWithPopup(auth, facebookProvider);
       alert("Logged in with Facebook!");
-      navigate("/");
+      navigate("/dashboard"); // Redirect to Dashboard
     } catch (error: any) {
       alert(error.message);
     }
@@ -74,7 +84,9 @@ const Login = () => {
                 <GraduationCap className="h-8 w-8 text-blue-600" />
               </div>
             </motion.div>
-            <CardTitle className="text-2xl font-bold text-slate-800">Welcome Back</CardTitle>
+            <CardTitle className="text-2xl font-bold text-slate-800">
+              Welcome Back
+            </CardTitle>
             <CardDescription className="text-slate-500">
               Enter your credentials to access your account
             </CardDescription>
@@ -148,7 +160,10 @@ const Login = () => {
 
               <div className="text-sm text-center text-slate-600">
                 Don’t have an account?{" "}
-                <Link to="/register" className="text-blue-600 hover:underline font-medium">
+                <Link
+                  to="/register"
+                  className="text-blue-600 hover:underline font-medium"
+                >
                   Sign up
                 </Link>
               </div>

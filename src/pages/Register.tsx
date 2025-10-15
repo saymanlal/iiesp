@@ -3,14 +3,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { GraduationCap } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { auth, googleProvider, facebookProvider } from "@/firebaseConfig";
-import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -23,12 +34,10 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  // 🔹 Handle Email/Password Signup
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -37,10 +46,16 @@ const Register = () => {
     }
     try {
       setLoading(true);
-      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      await updateProfile(userCredential.user, { displayName: formData.fullName });
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      await updateProfile(userCredential.user, {
+        displayName: formData.fullName,
+      });
       alert("Registration successful!");
-      navigate("/login");
+      navigate("/dashboard"); // Redirect to Dashboard
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -48,21 +63,23 @@ const Register = () => {
     }
   };
 
+  // 🔹 Handle Google Signup
   const handleGoogleRegister = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
       alert("Registered with Google!");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       alert(error.message);
     }
   };
 
+  // 🔹 Handle Facebook Signup
   const handleFacebookRegister = async () => {
     try {
       await signInWithPopup(auth, facebookProvider);
       alert("Registered with Facebook!");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       alert(error.message);
     }
@@ -90,42 +107,56 @@ const Register = () => {
                 <GraduationCap className="h-8 w-8 text-blue-600" />
               </div>
             </motion.div>
-            <CardTitle className="text-2xl font-bold text-slate-800">Create an account</CardTitle>
+            <CardTitle className="text-2xl font-bold text-slate-800">
+              Create an account
+            </CardTitle>
             <CardDescription className="text-slate-500">
-              Start your learning journey with <span className="font-medium text-blue-600">IIESP</span> today
+              Start your learning journey with{" "}
+              <span className="font-medium text-blue-600">IIESP</span> today
             </CardDescription>
           </CardHeader>
 
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-5">
-              {["fullName", "email", "password", "confirmPassword"].map((field) => (
-                <div className="space-y-2" key={field}>
-                  <Label htmlFor={field} className="text-slate-700 font-medium capitalize">
-                    {field === "fullName"
-                      ? "Full Name"
-                      : field === "confirmPassword"
-                      ? "Confirm Password"
-                      : field.charAt(0).toUpperCase() + field.slice(1)}
-                  </Label>
-                  <motion.div whileFocus={{ scale: 1.01 }}>
-                    <Input
-                      id={field}
-                      type={field.includes("password") ? "password" : field === "email" ? "email" : "text"}
-                      placeholder={
-                        field === "fullName"
-                          ? "John Doe"
-                          : field === "email"
-                          ? "your.email@example.com"
-                          : "••••••••"
-                      }
-                      value={(formData as any)[field]}
-                      onChange={handleChange}
-                      required
-                      className="border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
-                    />
-                  </motion.div>
-                </div>
-              ))}
+              {["fullName", "email", "password", "confirmPassword"].map(
+                (field) => (
+                  <div className="space-y-2" key={field}>
+                    <Label
+                      htmlFor={field}
+                      className="text-slate-700 font-medium capitalize"
+                    >
+                      {field === "fullName"
+                        ? "Full Name"
+                        : field === "confirmPassword"
+                        ? "Confirm Password"
+                        : field.charAt(0).toUpperCase() + field.slice(1)}
+                    </Label>
+                    <motion.div whileFocus={{ scale: 1.01 }}>
+                      <Input
+                        id={field}
+                        type={
+                          field.includes("password")
+                            ? "password"
+                            : field === "email"
+                            ? "email"
+                            : "text"
+                        }
+                        placeholder={
+                          field === "fullName"
+                            ? "John Doe"
+                            : field === "email"
+                            ? "your.email@example.com"
+                            : "••••••••"
+                        }
+                        value={(formData as any)[field]}
+                        onChange={handleChange}
+                        required
+                        className="border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
+                      />
+                    </motion.div>
+                  </div>
+                )
+              )}
             </CardContent>
 
             <CardFooter className="flex flex-col space-y-5">
@@ -159,7 +190,10 @@ const Register = () => {
 
               <div className="text-sm text-center text-slate-600">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-600 hover:underline font-medium">
+                <Link
+                  to="/login"
+                  className="text-blue-600 hover:underline font-medium"
+                >
                   Sign in
                 </Link>
               </div>
