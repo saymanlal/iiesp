@@ -180,106 +180,138 @@ git push origin your-project-name
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+
+<style>
+  /* Animated gradient text for contributor names */
+  .gradient-text {
+    background: linear-gradient(270deg, #ff6ec4, #7873f5, #42f5e6, #ff6ec4);
+    background-size: 600% 600%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientAnimation 5s ease infinite;
+    text-decoration: none;
+  }
+
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .contributor-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Ensures square crop */
+    border-radius: 0px; /* Square frame */
+  }
+
+  a.no-underline {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
+
 <table>
   <tbody>
+    <!-- First Row -->
     <tr>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://www.linkedin.com/in/aryan-jain07/" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/117700812?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Aryan Jain"/><br />
-          <sub><b>Aryan Jain</b></sub>
+        <a href="https://www.linkedin.com/in/aryan-jain07/" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/117700812?v=4" class="contributor-img" alt="Aryan Jain"/><br />
+          <sub><b class="gradient-text">Aryan Jain</b></sub>
         </a><br />
         <span title="Ideas, Planning & Feedback">🤔</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://www.linkedin.com/in/harsh-kumar-b0b879245/" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/116896176?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Harsh Kumar"/><br />
-          <sub><b>Harsh Kumar</b></sub>
+        <a href="https://www.linkedin.com/in/harsh-kumar-b0b879245/" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/116896176?v=4" class="contributor-img" alt="Harsh Kumar"/><br />
+          <sub><b class="gradient-text">Harsh Kumar</b></sub>
         </a><br />
         <span title="Documentation">📖</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://www.linkedin.com/in/ayush-gautam-9baa14248" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/142661926?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Ayush Gautam"/><br />
-          <sub><b>Ayush Gautam</b></sub>
+        <a href="https://www.linkedin.com/in/ayush-gautam-9baa14248" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/142661926?v=4" class="contributor-img" alt="Ayush Gautam"/><br />
+          <sub><b class="gradient-text">Ayush Gautam</b></sub>
         </a><br />
         <span title="Documentation">📖</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://www.linkedin.com/in/shruti-parmar-0625282a2/" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/145827392?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Shruti Parmar"/><br />
-          <sub><b>Shruti Parmar</b></sub>
+        <a href="https://www.linkedin.com/in/shruti-parmar-0625282a2/" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/145827392?v=4" class="contributor-img" alt="Shruti Parmar"/><br />
+          <sub><b class="gradient-text">Shruti Parmar</b></sub>
         </a><br />
         <span title="Code">💻</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://worksofsayman.vercel.app" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/135053354?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Sayman Lal"/><br />
-          <sub><b>Sayman Lal</b></sub>
+        <a href="https://worksofsayman.vercel.app" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/135053354?v=4" class="contributor-img" alt="Sayman Lal"/><br />
+          <sub><b class="gradient-text">Sayman Lal</b></sub>
         </a><br />
         <span title="Code">💻</span> <span title="Documentation">📖</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://www.linkedin.com/in/henry-yost/" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/152554805?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Henry"/><br />
-          <sub><b>Henry</b></sub>
+        <a href="https://www.linkedin.com/in/henry-yost/" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/152554805?v=4" class="contributor-img" alt="Henry"/><br />
+          <sub><b class="gradient-text">Henry</b></sub>
         </a><br />
         <span title="Documentation">📖</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://github.com/MK-09-coder" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/110844185?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="MK-09-coder"/><br />
-          <sub><b>MK-09-coder</b></sub>
+        <a href="https://github.com/MK-09-coder" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/110844185?v=4" class="contributor-img" alt="MK-09-coder"/><br />
+          <sub><b class="gradient-text">MK-09-coder</b></sub>
         </a><br />
         <span title="Code">💻</span>
       </td>
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://github.com/srpriyanshi6" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/161857449?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Priyanshi"/><br />
-          <sub><b>Priyanshi</b></sub>
+        <a href="https://github.com/srpriyanshi6" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/161857449?v=4" class="contributor-img" alt="Priyanshi"/><br />
+          <sub><b class="gradient-text">Priyanshi</b></sub>
         </a><br />
         <span title="Documentation">📖</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://www.linkedin.com/in/pushkraj-p-naik-437224286/" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/140972568?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Pushkraj Naik"/><br />
-          <sub><b>Pushkraj Naik</b></sub>
+        <a href="https://www.linkedin.com/in/pushkraj-p-naik-437224286/" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/140972568?v=4" class="contributor-img" alt="Pushkraj Naik"/><br />
+          <sub><b class="gradient-text">Pushkraj Naik</b></sub>
         </a><br />
         <span title="Code">💻</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://github.com/harshsinghreal" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/93440683?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Harsh Singh"/><br />
-          <sub><b>Harsh Singh</b></sub>
+        <a href="https://github.com/harshsinghreal" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/93440683?v=4" class="contributor-img" alt="Harsh Singh"/><br />
+          <sub><b class="gradient-text">Harsh Singh</b></sub>
         </a><br />
         <span title="Code">💻</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://www.adityakr.com/" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/97042972?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Aditya Kumar"/><br />
-          <sub><b>Aditya Kumar</b></sub>
+        <a href="https://www.adityakr.com/" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/97042972?v=4" class="contributor-img" alt="Aditya Kumar"/><br />
+          <sub><b class="gradient-text">Aditya Kumar</b></sub>
         </a><br />
         <span title="Code">💻</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://github.com/Itsmeaadeesh" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/183415722?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Aadeesh Jain"/><br />
-          <sub><b>Aadeesh Jain</b></sub>
+        <a href="https://github.com/Itsmeaadeesh" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/183415722?v=4" class="contributor-img" alt="Aadeesh Jain"/><br />
+          <sub><b class="gradient-text">Aadeesh Jain</b></sub>
         </a><br />
         <span title="Code">💻</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://github.com/pensivevenus" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/186363231?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Vaanya Jain"/><br />
-          <sub><b>Vaanya Jain</b></sub>
+        <a href="https://github.com/pensivevenus" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/186363231?v=4" class="contributor-img" alt="Vaanya Jain"/><br />
+          <sub><b class="gradient-text">Vaanya Jain</b></sub>
         </a><br />
         <span title="Design">🎨</span>
       </td>
       <td align="center" valign="top" width="14.28%">
-        <a href="https://github.com/anant-jain01" style="text-decoration:none;color:inherit;">
-          <img src="https://avatars.githubusercontent.com/u/139585700?v=4" width="100px;" height="100px" style="border-radius:4px;" alt="Anant Jain"/><br />
-          <sub><b>Anant Jain</b></sub>
+        <a href="https://github.com/anant-jain01" class="no-underline">
+          <img src="https://avatars.githubusercontent.com/u/139585700?v=4" class="contributor-img" alt="Anant Jain"/><br />
+          <sub><b class="gradient-text">Anant Jain</b></sub>
         </a><br />
         <span title="Code">💻</span>
       </td>
